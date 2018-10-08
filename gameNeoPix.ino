@@ -19,7 +19,7 @@
 #define TOP_RIGHT_START TOP_LEFT_LEN
 #define TOP_RIGHT_LEN 40
 
-#define LEFT_STRIP_LEN TOP_STRIP_LEN/2
+#define LEFT_STRIP_LEN 60
 #define RIGHT_STRIP_LEN LEFT_STRIP_LEN
 
 #define RING_LENGTH 16
@@ -85,14 +85,19 @@ void setupNeoPix()
   }
 
   // start effects?
-  player1Ring.setNoEfx();
+  setAllWindowsNoEfx();
+
+}
+
+void setAllWindowsNoEfx()
+{
+    player1Ring.setNoEfx();
   player2Ring.setNoEfx();
   rightWindow.setNoEfx();
   leftWindow.setNoEfx();
   topLeftWindow.setNoEfx();
   topRightWindow.setNoEfx();
   topFullWindow.setNoEfx();
-
 }
 
 void modePixOn()

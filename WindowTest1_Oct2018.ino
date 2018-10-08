@@ -17,6 +17,10 @@ uint32_t
   ORANGE = Adafruit_NeoPixel::Color(FULLON, 128, 0);
 
 ////////////////////////////////////
+typedef enum WindowEnum {topFull, topLeft, topRight, Left, Right, Player1, Player2} WindowEnum;
+WindowEnum windowNumber = topFull; // topFull, topLeft topRight Left Right Player1 Player 2
+int windowEfxCount = 0;
+int windowChangeEfxMax = 15; // number of times we change efx for each window
 
 void setup() {
   Serial.begin(115200);
@@ -27,11 +31,12 @@ void setup() {
 //  startupBlinks();
   allOff();
 
+  windowNumber = Left;
+  setTestWindow(leftWindow,0);
+
  Serial.println("startup complete, now loop");
- setInitialWindows();
  showAllStrip();
 }
-
 
 void loop()
 {
@@ -42,12 +47,50 @@ void loop()
   // show the strips
   NeoWindow::updateTime();
 
-  topFullWindowUpdate();
-  topLeftWindowUpdate();
-  topRightWindowUpdate();
-
-  rightWindowUpdate();
-  leftWindowUpdate();
+  if (updateTestWindow()) 
+  {
+    // update changed the effect
+    windowEfxCount++;
+    if (windowEfxCount >= windowChangeEfxMax) 
+    {
+      switchWindows();
+    }
+  }
   
   showAllStrip();
+}
+
+void switchWindows()
+{
+    // done enough on this window, do next one
+  Serial.print("Switch Windows was doing ");Serial.print(windowNumber);
+  clearTestWindow();
+  // select new test window
+  switch(windowNumber)
+  {
+    case topFull:
+      windowNumber = topLeft;
+      setTestWindow(topLeftWindow,0);
+      break;
+    case topLeft:
+      windowNumber = topRight;
+      setTestWindow(topRightWindow,0);
+    case topRight:
+      windowNumber = Left;
+      setTestWindow(leftWindow,0);
+    case Left:
+      windowNumber = Right;
+      setTestWindow(rightWindow,0);
+    case Right:
+      windowNumber = Player1;
+      setTestWindow(player1Ring,0);
+    case Player1:
+      windowNumber = Player2;
+      setTestWindow(player2Ring,0);
+    case Player2:
+    default:
+      windowNumber = topFull;
+      setTestWindow(topFullWindow,0);
+  }
+  Serial.print("now doing "); Serial.println(windowNumber);
 }
