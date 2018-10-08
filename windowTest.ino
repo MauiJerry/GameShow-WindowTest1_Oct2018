@@ -24,150 +24,23 @@ void  setInitialWindows()
   rightWindow.setSolidColorEfx(BLUE ,2000);
 }
 
-void topFullWindowUpdate()
-{
-    // change window effects?
-  if (topFullWindow.effectDone())
-  {
-    topFullCount++;
-    topFullWindow.setNoEfx();
-  }
-  topFullWindow.updateWindow();
-}
-
-void topLeftWindowUpdate()
-{
-  int delayTime = random(100,500);
-  int count = random(5,10);
-  if (topLeftWindow.effectDone())
-  {
-    topLeftCount++;
-    switch (topLeftCount)
-    {
-      case 0:
-        topRightWindow.setSolidColorEfx(topStrip.randomColor(),2000);
-        break;
-      case 1:
-         topLeftWindow.setSparkleEfx(topStrip.randomColor(), delayTime, delayTime/2, count);
-       break;
-      case 2:
-         topLeftWindow.setMultiSparkleEfx(topStrip.randomColor(), 
-             delayTime/2, delayTime, topLeftWindow.getNumPixels()/5, count);
-       break;
-      case 3:
-        topLeftWindow.setRainbowEfx(delayTime, 1, count);
-        break;
-      default:
-        topLeftWindow.setWipeEfx(topStrip.randomColor(), delayTime, count );
-        topLeftCount = -1;
-    }
-  }
-  topLeftWindow.updateWindow();
-}
-
-void topRightWindowUpdate()
-{
-  int delayTime = random(100,500);
-  int count = random(5,10);
-  if (topRightWindow.effectDone())
-  {
-    topRightCount++;
-    switch (topRightCount)
-    {
-      case 0:
-        topRightWindow.setSolidColorEfx(topStrip.randomColor() ,2000);
-        break;
-      case 1:
-         topRightWindow.setDazzleEfx( delayTime, 50, count);
-       break;
-      case 2:
-        topRightWindow.setFadeEfx(0, topStrip.randomColor(), delayTime, topRightWindow.fadeTypeCycle, count );
-       break;
-      case 3:
-         topRightWindow.setMultiSparkleEfx(topStrip.randomColor(), delayTime/2, delayTime, topRightWindow.getNumPixels()/5, count);
-        break;
-      default:
-        topRightWindow.setRainbowEfx(delayTime, 1, count);
-        topRightCount = -1;
-    }
-  }
-   topRightWindow.updateWindow();
-}
-
-void leftWindowUpdate()
-{
-  int delayTime = random(100,500);
-  int count = random(5,10);
-  if (leftWindow.effectDone())
-  {
-    leftCount++;
-    switch (leftCount)
-    {
-      case 0:
-        leftWindow.setSolidColorEfx(RED ,2000);
-        break;
-      case 1:
-        leftWindow.setFadeEfx(0, topStrip.randomColor(), delayTime, leftWindow.fadeTypeCycle, count );
-       break;
-      case 2:
-         leftWindow.setCircleEfx(leftStrip.randomColor(), delayTime, count,0);
-      break;
-      case 3:
-         leftWindow.setDazzleEfx(delayTime, 50, count);
-        break;
-      default:
-        leftWindow.setSolidColorEfx(topStrip.randomColor() ,2000);
-        leftCount = -1;
-    }
-  }
-  leftWindow.updateWindow();
-}
-
-void rightWindowUpdate()
-{
-   int delayTime = random(100,500);
-  int count = random(5,10);
-  if (rightWindow.effectDone())
-  {
-    rightCount++;
-    switch (rightCount)
-    {
-      case 0:
-        rightWindow.setSolidColorEfx(BLUE ,2000);
-        break;
-      case 1:
-        rightWindow.setFadeEfx(0, topStrip.randomColor(), delayTime, rightWindow.fadeTypeCycle, count );
-       break;
-      case 2:
-         rightWindow.setCircleEfx(leftStrip.randomColor(), delayTime, count,0);
-      break;
-      case 3:
-         rightWindow.setDazzleEfx(delayTime, 50, count);
-        break;
-      default:
-        rightWindow.setSolidColorEfx(topStrip.randomColor() ,2000);
-        rightCount = -1;
-    }
-  }
-  rightWindow.updateWindow();
-}
-
 ////////////////////////
 // parameterized test
 int defaultEfxCount = 5;
-#define DEFAULT_DELAYTIME 60
+int defaultDelayTime = 60;
 int windowStartEfxNum = 0;
 
 NeoWindow &currWindow = topFullWindow;
 extern void setCurrWindowRandomEfx();
 
 NeoStrip *currStrip = NULL;
-int startEfxNum =0;
+int startEfxNum = 0;
 int curWindowEffectNum = startEfxNum;
 
 void setTestWindow(NeoWindow window, int efxNum)
 {
   currWindow = window;
+  startEfxNum = efxNum;
   if (startEfxNum < 0)
     setCurrWindowRandomEfx();
   else
@@ -198,18 +71,19 @@ boolean updateTestWindow()
 
 void setCurrWindowRandomEfx()
 {
-  int randomEffect = random(0,14);
+  Serial.println("Set Random Effect");
+  int randomEffect = random(0,15);
   setCurrWindowEfx(randomEffect);
 }
 
 void setCurrWindowEfx(int windowEffectNum)
 {
   int effectCount = defaultEfxCount; // changes per effect
-  int delayTime = DEFAULT_DELAYTIME; // default is 1/4sec each step
+  int delayTime = defaultDelayTime; // default is 1/4sec each step
   uint32_t randomColor = NeoStrip::randomColor();
   uint32_t randomColor2 = NeoStrip::randomColor();
 
-  Serial.print("new window Effect:");Serial.print(windowEffectNum);
+  Serial.print("set new window Effect:");Serial.print(windowEffectNum);
   switch (windowEffectNum) {
     //1 = SolidColorEfx
     // 2 = circle fwd
@@ -304,6 +178,6 @@ void setCurrWindowEfx(int windowEffectNum)
       Serial.println(" DEFAULT = black hold 5sec");
       windowEffectNum = windowStartEfxNum;
       currWindow.fillBlack( );
-      currWindow.setHoldEfx(5000);
+      currWindow.setHoldEfx(2000);
   }
 }

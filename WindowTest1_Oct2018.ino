@@ -20,7 +20,11 @@ uint32_t
 typedef enum WindowEnum {topFull, topLeft, topRight, Left, Right, Player1, Player2} WindowEnum;
 WindowEnum windowNumber = topFull; // topFull, topLeft topRight Left Right Player1 Player 2
 int windowEfxCount = 0;
-int windowChangeEfxMax = 15; // number of times we change efx for each window
+int smallChange = 5;
+int allEfx = 15;
+int windowChangeEfxMax = smallChange; // number of times we change efx for each window
+
+int startEfxNumOrRandom = -1;
 
 void setup() {
   Serial.begin(115200);
@@ -31,8 +35,8 @@ void setup() {
 //  startupBlinks();
   allOff();
 
-  windowNumber = Left;
-  setTestWindow(leftWindow,0);
+  windowNumber = topLeft;
+  setTestWindow(topLeftWindow,0);
 
  Serial.println("startup complete, now loop");
  showAllStrip();
@@ -70,27 +74,27 @@ void switchWindows()
   {
     case topFull:
       windowNumber = topLeft;
-      setTestWindow(topLeftWindow,0);
+      setTestWindow(topLeftWindow,startEfxNumOrRandom);
       break;
     case topLeft:
       windowNumber = topRight;
-      setTestWindow(topRightWindow,0);
+      setTestWindow(topRightWindow,startEfxNumOrRandom);
     case topRight:
       windowNumber = Left;
-      setTestWindow(leftWindow,0);
+      setTestWindow(leftWindow,startEfxNumOrRandom);
     case Left:
       windowNumber = Right;
-      setTestWindow(rightWindow,0);
+      setTestWindow(rightWindow,startEfxNumOrRandom);
     case Right:
       windowNumber = Player1;
-      setTestWindow(player1Ring,0);
+      setTestWindow(player1Ring,startEfxNumOrRandom);
     case Player1:
       windowNumber = Player2;
-      setTestWindow(player2Ring,0);
+      setTestWindow(player2Ring,startEfxNumOrRandom);
     case Player2:
     default:
       windowNumber = topFull;
-      setTestWindow(topFullWindow,0);
+      setTestWindow(topFullWindow,startEfxNumOrRandom);
   }
   Serial.print("now doing "); Serial.println(windowNumber);
 }
